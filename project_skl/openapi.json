@@ -1,0 +1,123 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Currency API",
+        "description": "Currency data",
+        "contact": {
+            "name": "Currency"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://project_skl.localhost:81",
+            "description": "LOCAL currency API"
+        }
+    ],
+    "paths": {
+        "/v1/currencies": {
+            "get": {
+                "tags": [
+                    "currencies"
+                ],
+                "description": "Returns query currency list",
+                "operationId": "fa76ddf022a4e6d8c377da6208f5342a",
+                "parameters": [
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "To select a language, the header content had to be provided 'ru-RU', 'en-US'",
+                        "schema": {
+                            "type": "string",
+                            "default": "ru-RU"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/currency/{name}": {
+            "get": {
+                "tags": [
+                    "currencies"
+                ],
+                "description": "Return query currency by name",
+                "operationId": "799ce201b5fe8a5fd53c6648a7e9775e",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Currency name for search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "To select a language, the header content had to be provided 'ru-RU', 'en-US'",
+                        "schema": {
+                            "type": "string",
+                            "default": "ru-RU"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "404": {
+                        "description": "Currency not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Currency": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "rate": {
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

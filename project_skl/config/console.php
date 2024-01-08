@@ -26,6 +26,15 @@ $config = [
             ],
         ],
         'db' => $db,
+        'currencyUpdater' => [
+            'class' => 'app\components\currency\CurrencyUpdater',
+        ],
+        'currencyService' => [
+            'class' => 'app\services\currency\CurrencyService',
+            'currencyUpdater' => [
+                'class' => 'app\components\currency\CurrencyUpdater',
+            ],
+        ],
     ],
     'params' => $params,
     /*
