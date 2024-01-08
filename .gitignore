@@ -1,0 +1,8 @@
+.composer-cache/
+nginx/nginx-logs/
+.idea
+.phpdoc
+.db-data/
+.dumps/
+.DS_Store
+

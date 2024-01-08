@@ -1,0 +1,61 @@
+version: "3.3"
+
+services:
+
+  db:
+    image: mariadb:latest
+    container_name: project_skl_db
+    restart: always
+    volumes:
+      - ./.db-data:/var/lib/mysql/
+      - ./.dumps:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_USER=project_skl
+      - MYSQL_PASSWORD=somepassword
+      - MYSQL_DATABASE=project_skl
+      - MYSQL_ROOT_PASSWORD=somepassword
+
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: project_skl_php
+    working_dir: /var/www/html
+    env_file:
+      - ./.env
+    volumes:
+      - ./.env:/var/www/html/.env:ro
+      - ./php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./project_skl:/var/www/html
+    expose:
+      - "9000"
+
+  nginx:
+    image: nginx:latest
+    container_name: project_skl_nginx
+#    restart: unless-stopped
+    ports:
+      - "80:80" # base
+      - "81:81" # api
+    volumes:
+      - ./project_skl:/var/www/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
+      - ./nginx/nginx-logs:/var/log/nginx:delegated
+    depends_on:
+      - php
+
+  open-api:
+    image: swaggerapi/swagger-ui:latest
+    container_name: open-api
+    restart: unless-stopped
+    environment:
+      - SWAGGER_JSON=/app/openapi.json
+    volumes:
+      - ./project_skl:/app:ro
+    ports:
+      - "8080:8080"   # Swagger UI
+    depends_on:
+      - php
